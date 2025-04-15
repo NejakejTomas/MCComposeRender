@@ -1,0 +1,23 @@
+{
+  "schemaVersion": 1,
+  "id": "composescreen",
+  "version": "${version}",
+  "name": "ComposeScreen",
+  "description": "",
+  "authors": [],
+  "contact": {},
+  "license": "MIT",
+  "icon": "assets/composescreen/icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "modmenu": [
+      "cz.nejakejtomas.composescreen.test.ConfigScreen"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric-language-kotlin": ">=${kotlin_loader_version}",
+    "minecraft": "${minecraft_version}"
+  },
+  "accessWidener": "composescreen.accesswidener"
+}
