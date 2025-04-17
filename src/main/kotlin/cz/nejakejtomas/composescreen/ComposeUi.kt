@@ -1,4 +1,4 @@
-@file:Suppress("INVISIBLE_MEMBER")
+@file:Suppress("INVISIBLE_MEMBER", "INVISIBLE_REFERENCE")
 
 package cz.nejakejtomas.composescreen
 
@@ -13,6 +13,9 @@ import androidx.compose.ui.InternalComposeUiApi
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.PointerButton
 import androidx.compose.ui.input.pointer.PointerEventType
+import androidx.compose.ui.platform.ClipEntry
+import androidx.compose.ui.platform.LocalClipboard
+import androidx.compose.ui.platform.NativeClipboard
 import androidx.compose.ui.scene.CanvasLayersComposeScene
 import androidx.compose.ui.scene.ComposeScene
 import androidx.compose.ui.unit.Density
@@ -26,6 +29,9 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.texture.DynamicTexture
 import net.minecraft.resources.ResourceLocation
 import org.jetbrains.skiko.FrameDispatcher
+import java.awt.datatransfer.DataFlavor
+import java.awt.datatransfer.StringSelection
+import java.awt.datatransfer.Transferable
 
 @OptIn(InternalComposeUiApi::class, ExperimentalFoundationApi::class)
 class ComposeUi(
@@ -49,7 +55,25 @@ class ComposeUi(
         layoutDirection = minecraft.languageManager.run { if (getLanguage(selected)?.bidirectional == true) LayoutDirection.Rtl else LayoutDirection.Ltr },
     ).apply {
         setContent {
-            CompositionLocalProvider(LocalTextContextMenu provides EmptyContextMenu) {
+            CompositionLocalProvider(
+                LocalTextContextMenu provides EmptyContextMenu,
+                LocalClipboard provides object : androidx.compose.ui.platform.Clipboard {
+                    override val nativeClipboard: NativeClipboard
+                        get() = minecraft.keyboardHandler::getClipboard to minecraft.keyboardHandler::setClipboard
+
+                    override suspend fun getClipEntry(): ClipEntry {
+                        return ClipEntry(StringSelection(minecraft.keyboardHandler.clipboard))
+                    }
+
+                    override suspend fun setClipEntry(clipEntry: ClipEntry?) {
+                        minecraft.keyboardHandler.clipboard =
+                            (clipEntry?.nativeClipEntry as? Transferable)?.getTransferData(
+                                DataFlavor.stringFlavor
+                            ) as? String ?: ""
+                    }
+                }
+            )
+            {
                 content(this@ComposeUi)
             }
         }
