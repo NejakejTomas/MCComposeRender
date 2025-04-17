@@ -6,7 +6,7 @@ import androidx.compose.ui.graphics.asSkiaBitmap
 import com.mojang.blaze3d.platform.NativeImage
 import org.jetbrains.skia.*
 
-class NativeImageWithCanvas private constructor(width: Int, height: Int, private val bitmap: ImageBitmap) :
+internal class NativeImageWithCanvas private constructor(width: Int, height: Int, private val bitmap: ImageBitmap) :
     NativeImage(Format.RGBA, width, height, true, bitmap.asSkiaBitmap().peekPixels()!!.addr) {
 
     val canvas = Canvas(bitmap)

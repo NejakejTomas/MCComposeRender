@@ -7,8 +7,7 @@ import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.pointer.PointerKeyboardModifiers
 import org.lwjgl.glfw.GLFW
 
-object Keys {
-
+internal object Keys {
     fun getComposeKeyEvent(
         event: KeyEvent,
         keyCode: Int,

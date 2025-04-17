@@ -9,11 +9,7 @@
   "license": "MIT",
   "icon": "assets/composescreen/icon.png",
   "environment": "client",
-  "entrypoints": {
-    "modmenu": [
-      "cz.nejakejtomas.composescreen.test.ConfigScreen"
-    ]
-  },
+  "entrypoints": {},
   "depends": {
     "fabricloader": ">=${loader_version}",
     "fabric-language-kotlin": ">=${kotlin_loader_version}",

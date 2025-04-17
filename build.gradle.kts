@@ -3,8 +3,8 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     id("maven-publish")
-    alias(libs.plugins.fabric.loom)
     alias(libs.plugins.kotlin)
+    alias(libs.plugins.fabric.loom)
 
     alias(libs.plugins.jetbrainsCompose)
     alias(libs.plugins.compose.compiler)
@@ -26,13 +26,7 @@ java {
     withSourcesJar()
 }
 
-
-
 repositories {
-    maven {
-        name = "Terraformers"
-        url = uri("https://maven.terraformersmc.com/")
-    }
     google {
         mavenContent {
             includeGroupAndSubgroups("androidx")
@@ -55,15 +49,12 @@ dependencies {
     modImplementation(libs.fabric.kotlin)
     implementation(compose.runtime)
     implementation(compose.foundation)
-    implementation(compose.components.resources)
-    implementation(compose.components.uiToolingPreview)
     implementation(compose.desktop.windows_x64)
-//    implementation(libs.androidx.lifecycle.viewmodel)
-//    implementation(libs.androidx.lifecycle.runtime.compose)
-
-    //TMP
-    modApi(libs.modmenu)
-    modApi(libs.fabric.api)
+    implementation(compose.desktop.windows_arm64)
+    implementation(compose.desktop.linux_x64)
+    implementation(compose.desktop.linux_arm64)
+    implementation(compose.desktop.macos_x64)
+    implementation(compose.desktop.macos_arm64)
 }
 
 tasks.processResources {

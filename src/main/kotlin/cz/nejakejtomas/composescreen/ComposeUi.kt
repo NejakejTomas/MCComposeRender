@@ -40,7 +40,7 @@ class ComposeUi(
     private var pixelWidth: Int,
     private var pixelHeight: Int,
     scale: Float,
-    val content: @Composable (ui: ComposeUi) -> Unit,
+    private val content: @Composable (ui: ComposeUi) -> Unit,
 ) {
     private val uiScope = CoroutineScope(renderDispatcher)
     private val frameDispatcher = FrameDispatcher(uiScope) {
@@ -57,25 +57,25 @@ class ComposeUi(
         setContent {
             CompositionLocalProvider(
                 LocalTextContextMenu provides EmptyContextMenu,
-                LocalClipboard provides object : androidx.compose.ui.platform.Clipboard {
-                    override val nativeClipboard: NativeClipboard
-                        get() = minecraft.keyboardHandler::getClipboard to minecraft.keyboardHandler::setClipboard
+                LocalClipboard provides clipboard,
+                LocalMinecraft provides minecraft,
+            ) { content(this@ComposeUi) }
+        }
+    }
 
-                    override suspend fun getClipEntry(): ClipEntry {
-                        return ClipEntry(StringSelection(minecraft.keyboardHandler.clipboard))
-                    }
+    private val clipboard = object : androidx.compose.ui.platform.Clipboard {
+        override val nativeClipboard: NativeClipboard
+            get() = minecraft.keyboardHandler::getClipboard to minecraft.keyboardHandler::setClipboard
 
-                    override suspend fun setClipEntry(clipEntry: ClipEntry?) {
-                        minecraft.keyboardHandler.clipboard =
-                            (clipEntry?.nativeClipEntry as? Transferable)?.getTransferData(
-                                DataFlavor.stringFlavor
-                            ) as? String ?: ""
-                    }
-                }
-            )
-            {
-                content(this@ComposeUi)
-            }
+        override suspend fun getClipEntry(): ClipEntry {
+            return ClipEntry(StringSelection(minecraft.keyboardHandler.clipboard))
+        }
+
+        override suspend fun setClipEntry(clipEntry: ClipEntry?) {
+            minecraft.keyboardHandler.clipboard =
+                (clipEntry?.nativeClipEntry as? Transferable)?.getTransferData(
+                    DataFlavor.stringFlavor
+                ) as? String ?: ""
         }
     }
 
@@ -164,6 +164,7 @@ class ComposeUi(
     }
 
     private fun renderFrame() {
+        RenderSystem.assertOnRenderThread()
         image.clear()
         scene.render(image.canvas, System.nanoTime())
         texture.upload()
