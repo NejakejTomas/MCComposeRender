@@ -1,3 +1,5 @@
+@file:Suppress("INVISIBLE_MEMBER")
+
 package cz.nejakejtomas.composescreen
 
 import androidx.compose.foundation.ContextMenuArea
@@ -9,9 +11,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.InternalComposeUiApi
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.input.key.Key
-import androidx.compose.ui.input.key.KeyEvent
-import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.pointer.PointerButton
 import androidx.compose.ui.input.pointer.PointerEventType
 import androidx.compose.ui.scene.CanvasLayersComposeScene
@@ -27,8 +26,6 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.texture.DynamicTexture
 import net.minecraft.resources.ResourceLocation
 import org.jetbrains.skiko.FrameDispatcher
-import org.lwjgl.glfw.GLFW
-
 
 @OptIn(InternalComposeUiApi::class, ExperimentalFoundationApi::class)
 class ComposeUi(
@@ -93,61 +90,52 @@ class ComposeUi(
         scene.density = density
     }
 
-    fun keyDown(keyCode: Int, scanCode: Int, modifier: Int) {
+    fun keyDown(keyCode: Int, scanCode: Int, modifiers: Int): Boolean {
         RenderSystem.assertOnRenderThread()
-        if (closed) return
+        if (closed) return false
 
-        scene.sendKeyEvent(
-            KeyEvent(
-                Key(keyCode),
-                KeyEventType.KeyDown,
-                scanCode,
-                modifier and GLFW.GLFW_MOD_CONTROL != 0,
-                false,
-                modifier and GLFW.GLFW_MOD_ALT != 0,
-                modifier and GLFW.GLFW_MOD_SHIFT != 0,
-            )
-        )
+        return scene.sendKeyEvent(Keys.getComposeKeyEvent(Keys.KeyEvent.Press, keyCode, scanCode, modifiers))
     }
 
-    fun keyUp(keyCode: Int, scanCode: Int, modifier: Int) {
+    fun keyUp(keyCode: Int, scanCode: Int, modifiers: Int): Boolean {
         RenderSystem.assertOnRenderThread()
-        if (closed) return
+        if (closed) return false
 
-        scene.sendKeyEvent(
-            KeyEvent(
-                Key(keyCode),
-                KeyEventType.KeyUp,
-                scanCode,
-                modifier and GLFW.GLFW_MOD_CONTROL != 0,
-                false,
-                modifier and GLFW.GLFW_MOD_ALT != 0,
-                modifier and GLFW.GLFW_MOD_SHIFT != 0,
-            )
-        )
+        return scene.sendKeyEvent(Keys.getComposeKeyEvent(Keys.KeyEvent.Release, keyCode, scanCode, modifiers))
     }
 
-    fun mouseDown(offset: Offset, i: Int) {
+    fun charTyped(codePoint: Char, modifiers: Int): Boolean {
         RenderSystem.assertOnRenderThread()
-        if (closed) return
-        scene.sendPointerEvent(PointerEventType.Press, offset, button = PointerButton(i))
+        if (closed) return false
+
+        return scene.sendKeyEvent(Keys.getComposeTypeEvent(codePoint, modifiers))
     }
 
-    fun mouseUp(offset: Offset, i: Int) {
+    fun mouseDown(offset: Offset, i: Int): Boolean {
         RenderSystem.assertOnRenderThread()
-        if (closed) return
-        scene.sendPointerEvent(PointerEventType.Release, offset, button = PointerButton(i))
+        if (closed) return false
+
+        return scene.sendPointerEvent(PointerEventType.Press, offset, button = PointerButton(i)).anyMovementConsumed
     }
 
-    fun scroll(offset: Offset, delta: Offset) {
+    fun mouseUp(offset: Offset, i: Int): Boolean {
         RenderSystem.assertOnRenderThread()
-        if (closed) return
-        scene.sendPointerEvent(PointerEventType.Scroll, offset, delta)
+        if (closed) return false
+
+        return scene.sendPointerEvent(PointerEventType.Release, offset, button = PointerButton(i)).anyMovementConsumed
+    }
+
+    fun scroll(offset: Offset, delta: Offset): Boolean {
+        RenderSystem.assertOnRenderThread()
+        if (closed) return false
+
+        return scene.sendPointerEvent(PointerEventType.Scroll, offset, delta).anyMovementConsumed
     }
 
     fun mouseMove(offset: Offset) {
         RenderSystem.assertOnRenderThread()
         if (closed) return
+
         scene.sendPointerEvent(PointerEventType.Move, offset)
     }
 

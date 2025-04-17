@@ -12,29 +12,23 @@ import net.minecraft.network.chat.Component
 class ComposeScreen(
     title: Component,
     private val parent: Screen? = null,
+    private val consumeEvents: Boolean = false,
     private val content: @Composable (ui: ComposeUi) -> Unit,
 ) : Screen(title) {
-
-    private lateinit var mc: Minecraft
-    private lateinit var ui: ComposeUi
-    private val renderDispatcher = object : LoopDispatcher() {
-        fun runPublic() = run()
+    private val mc: Minecraft by lazy { minecraft!! }
+    private val ui: ComposeUi by lazy {
+        ComposeUi(
+            mc,
+            renderDispatcher,
+            (width * scale).toInt(),
+            (height * scale).toInt(),
+            scale,
+            content,
+        )
     }
 
-    override fun init() {
-        super.init()
-
-        if (!this::mc.isInitialized) mc = minecraft!!
-        if (!this::ui.isInitialized) {
-            ui = ComposeUi(
-                mc,
-                renderDispatcher,
-                (width * scale).toInt(),
-                (height * scale).toInt(),
-                scale,
-                content,
-            )
-        }
+    private val renderDispatcher = object : LoopDispatcher() {
+        fun runPublic() = run()
     }
 
     override fun resize(minecraft: Minecraft, width: Int, height: Int) {
@@ -69,34 +63,48 @@ class ComposeScreen(
     }
 
     override fun mouseClicked(x: Double, y: Double, i: Int): Boolean {
-        ui.mouseDown(Offset(x.toFloat(), y.toFloat()) * scale, i)
+        if (ui.mouseDown(Offset(x.toFloat(), y.toFloat()) * scale, i) && consumeEvents) return true
+
         return super.mouseClicked(x, y, i)
     }
 
     override fun mouseReleased(x: Double, y: Double, i: Int): Boolean {
-        ui.mouseUp(Offset(x.toFloat(), y.toFloat()) * scale, i)
+        if (ui.mouseUp(Offset(x.toFloat(), y.toFloat()) * scale, i) && consumeEvents) return true
+
         return super.mouseReleased(x, y, i)
     }
 
     override fun keyPressed(keyCode: Int, scanCode: Int, modifiers: Int): Boolean {
-        ui.keyDown(keyCode, scanCode, modifiers)
+        if (ui.keyDown(keyCode, scanCode, modifiers) && consumeEvents) return true
 
         return super.keyPressed(keyCode, scanCode, modifiers)
     }
 
     override fun keyReleased(keyCode: Int, scanCode: Int, modifiers: Int): Boolean {
-        ui.keyUp(keyCode, scanCode, modifiers)
+        if (ui.keyUp(keyCode, scanCode, modifiers) && consumeEvents) return true
 
         return super.keyReleased(keyCode, scanCode, modifiers)
     }
 
+    override fun charTyped(codePoint: Char, modifiers: Int): Boolean {
+        if (ui.charTyped(codePoint, modifiers) && consumeEvents) return true
+
+        return super.charTyped(codePoint, modifiers)
+    }
+
     override fun mouseMoved(x: Double, y: Double) {
         ui.mouseMove(Offset(x.toFloat(), y.toFloat()) * scale)
+
         super.mouseMoved(x, y)
     }
 
     override fun mouseScrolled(x: Double, y: Double, scrollX: Double, scrollY: Double): Boolean {
-        ui.scroll(Offset(x.toFloat(), y.toFloat()) * scale, Offset(-scrollX.toFloat(), -scrollY.toFloat()))
+        if (ui.scroll(
+                Offset(x.toFloat(), y.toFloat()) * scale,
+                Offset(-scrollX.toFloat(), -scrollY.toFloat())
+            )
+        ) return true
+
         return super.mouseScrolled(x, y, scrollX, scrollY)
     }
 }
