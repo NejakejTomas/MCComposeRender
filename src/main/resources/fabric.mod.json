@@ -15,5 +15,12 @@
     "fabric-language-kotlin": ">=${kotlin_loader_version}",
     "minecraft": "${minecraft_version}"
   },
+  "custom": {
+    "modmenu": {
+      "badges": [
+        "library"
+      ]
+    }
+  },
   "accessWidener": "composescreen.accesswidener"
 }

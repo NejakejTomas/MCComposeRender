@@ -10,11 +10,10 @@ import net.minecraft.client.gui.screens.Screen
 import net.minecraft.client.renderer.RenderType
 import net.minecraft.network.chat.Component
 
-class ComposeScreen(
+abstract class ComposeScreen(
     title: Component,
     private val parent: Screen? = null,
     private val consumeEvents: Boolean = false,
-    private val content: @Composable () -> Unit,
 ) : Screen(title) {
     private val mc: Minecraft by lazy { minecraft!! }
     private val ui: ComposeUi by lazy {
@@ -27,6 +26,9 @@ class ComposeScreen(
             { contentWithContext() }
         )
     }
+
+    @Composable
+    protected abstract fun content()
 
     @Composable
     private fun contentWithContext() {
