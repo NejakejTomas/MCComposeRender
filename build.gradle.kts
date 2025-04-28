@@ -37,7 +37,7 @@ repositories {
 }
 
 loom {
-    accessWidenerPath = file("src/main/resources/composescreen.accesswidener")
+    accessWidenerPath = file("src/main/resources/mccomposerender.accesswidener")
 }
 
 dependencies {

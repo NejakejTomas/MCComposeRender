@@ -1,6 +1,6 @@
 @file:Suppress("INVISIBLE_MEMBER", "INVISIBLE_REFERENCE")
 
-package cz.nejakejtomas.composescreen
+package cz.nejakejtomas.mccomposerender
 
 import androidx.compose.foundation.ContextMenuArea
 import androidx.compose.foundation.ContextMenuState

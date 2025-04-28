@@ -1,4 +1,4 @@
-package cz.nejakejtomas.composescreen
+package cz.nejakejtomas.mccomposerender
 
 import com.mojang.blaze3d.systems.RenderSystem
 import kotlinx.coroutines.MainCoroutineDispatcher

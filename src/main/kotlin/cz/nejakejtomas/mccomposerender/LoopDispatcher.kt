@@ -1,4 +1,4 @@
-package cz.nejakejtomas.composescreen
+package cz.nejakejtomas.mccomposerender
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Runnable

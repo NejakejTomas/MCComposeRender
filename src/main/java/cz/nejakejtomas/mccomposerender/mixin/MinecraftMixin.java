@@ -1,6 +1,6 @@
-package cz.nejakejtomas.composescreen.mixin;
+package cz.nejakejtomas.mccomposerender.mixin;
 
-import cz.nejakejtomas.composescreen.MainDispatcher;
+import cz.nejakejtomas.mccomposerender.MainDispatcher;
 import net.minecraft.client.Minecraft;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -12,6 +12,6 @@ public abstract class MinecraftMixin {
     // Render
     @Inject(method = "runTick", at = @At("HEAD"))
     void tick(boolean bl, CallbackInfo ci) {
-        MainDispatcher.INSTANCE.run$ComposeScreen();
+        MainDispatcher.INSTANCE.run$MCComposeRender();
     }
 }

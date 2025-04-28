@@ -1,4 +1,4 @@
-package cz.nejakejtomas.composescreen
+package cz.nejakejtomas.mccomposerender
 
 import androidx.compose.ui.graphics.Canvas
 import androidx.compose.ui.graphics.ImageBitmap

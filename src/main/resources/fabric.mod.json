@@ -1,13 +1,13 @@
 {
   "schemaVersion": 1,
-  "id": "composescreen",
+  "id": "mccomposerender",
   "version": "${version}",
-  "name": "ComposeScreen",
+  "name": "MCComposeRender",
   "description": "",
   "authors": [],
   "contact": {},
   "license": "MIT",
-  "icon": "assets/composescreen/icon.png",
+  "icon": "assets/mccomposerender/icon.png",
   "environment": "client",
   "entrypoints": {},
   "depends": {
@@ -16,7 +16,7 @@
     "minecraft": "${minecraft_version}"
   },
   "mixins": [
-    "composescreen.mixins.json"
+    "mccomposerender.mixins.json"
   ],
   "custom": {
     "modmenu": {
@@ -25,5 +25,5 @@
       ]
     }
   },
-  "accessWidener": "composescreen.accesswidener"
+  "accessWidener": "mccomposerender.accesswidener"
 }
