@@ -7,7 +7,7 @@ import androidx.compose.foundation.text.TextContextMenu
 import androidx.compose.runtime.Composable
 
 @OptIn(ExperimentalFoundationApi::class)
-object EmptyContextMenu : TextContextMenu {
+internal object EmptyContextMenu : TextContextMenu {
     @Composable
     override fun Area(
         textManager: TextContextMenu.TextManager,

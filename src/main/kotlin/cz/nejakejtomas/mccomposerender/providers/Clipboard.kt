@@ -7,7 +7,7 @@ import java.awt.datatransfer.DataFlavor
 import java.awt.datatransfer.StringSelection
 import java.awt.datatransfer.Transferable
 
-class Clipboard(private val keyboardHandler: KeyboardHandler) : androidx.compose.ui.platform.Clipboard {
+internal class Clipboard(private val keyboardHandler: KeyboardHandler) : androidx.compose.ui.platform.Clipboard {
     override val nativeClipboard: NativeClipboard
         get() = keyboardHandler::getClipboard to keyboardHandler::setClipboard
 
