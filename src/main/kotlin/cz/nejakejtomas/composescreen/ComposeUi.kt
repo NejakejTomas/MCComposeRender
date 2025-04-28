@@ -51,7 +51,7 @@ class ComposeUi(
         coroutineContext = renderDispatcher,
         invalidate = { frameDispatcher.scheduleFrame() },
         size = IntSize(pixelWidth, pixelHeight),
-        density = Density(scale),
+        density = Density(scale / 2),
         layoutDirection = minecraft.languageManager.run { if (getLanguage(selected)?.bidirectional == true) LayoutDirection.Rtl else LayoutDirection.Ltr },
     ).apply {
         setContent {
@@ -111,7 +111,7 @@ class ComposeUi(
         minecraft.textureManager.register(textureResource, texture)
 
         scene.size = newSize
-        scene.density = density
+        scene.density = Density(density.density / 2)
     }
 
     fun keyDown(keyCode: Int, scanCode: Int, modifiers: Int): Boolean {

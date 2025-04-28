@@ -16,7 +16,7 @@
     "minecraft": "${minecraft_version}"
   },
   "mixins": [
-    "bluemapminimap.mixins.json"
+    "composescreen.mixins.json"
   ],
   "custom": {
     "modmenu": {
