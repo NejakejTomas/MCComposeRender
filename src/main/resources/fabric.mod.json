@@ -4,10 +4,11 @@
   "version": "${version}",
   "name": "MCComposeRender",
   "description": "",
-  "authors": [],
+  "authors": [
+    "NejakejTomas"
+  ],
   "contact": {},
   "license": "MIT",
-  "icon": "assets/mccomposerender/icon.png",
   "environment": "client",
   "entrypoints": {},
   "depends": {
