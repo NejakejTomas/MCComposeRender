@@ -5,5 +5,5 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.screens.Screen
 
-val LocalScreen: ProvidableCompositionLocal<Screen?> = staticCompositionLocalOf { Minecraft.getInstance().screen }
+val LocalScreen: ProvidableCompositionLocal<Screen?> = staticCompositionLocalOf { null }
 val LocalMinecraft: ProvidableCompositionLocal<Minecraft> = staticCompositionLocalOf { Minecraft.getInstance() }
