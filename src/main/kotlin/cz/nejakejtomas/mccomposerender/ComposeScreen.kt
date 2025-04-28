@@ -1,9 +1,15 @@
 package cz.nejakejtomas.mccomposerender
 
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.text.LocalTextContextMenu
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.platform.LocalClipboard
 import androidx.compose.ui.unit.Density
+import cz.nejakejtomas.mccomposerender.providers.Clipboard
+import cz.nejakejtomas.mccomposerender.providers.EmptyContextMenu
+import cz.nejakejtomas.mccomposerender.providers.LocalScreen
 import net.minecraft.client.Minecraft
 import net.minecraft.client.gui.GuiGraphics
 import net.minecraft.client.gui.screens.Screen
@@ -15,7 +21,7 @@ abstract class ComposeScreen(
     private val parent: Screen? = null,
     private val consumeEvents: Boolean = false,
 ) : Screen(title) {
-    private val mc: Minecraft by lazy { minecraft!! }
+    private val mc: Minecraft by lazy { minecraft ?: Minecraft.getInstance() }
     private val ui: ComposeUi by lazy {
         ComposeUi(
             mc,
@@ -30,9 +36,14 @@ abstract class ComposeScreen(
     @Composable
     protected abstract fun content()
 
+    @OptIn(ExperimentalFoundationApi::class)
     @Composable
     private fun contentWithContext() {
-        CompositionLocalProvider(LocalScreen provides this) {
+        CompositionLocalProvider(
+            LocalTextContextMenu provides EmptyContextMenu,
+            LocalClipboard provides Clipboard(mc.keyboardHandler),
+            LocalScreen provides this,
+        ) {
             content()
         }
     }

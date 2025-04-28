@@ -4,7 +4,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Runnable
 import kotlin.coroutines.CoroutineContext
 
-internal abstract class LoopDispatcher : CoroutineDispatcher() {
+abstract class LoopDispatcher : CoroutineDispatcher() {
     private var queue = mutableListOf<Runnable>()
     private var buffer = mutableListOf<Runnable>()
 

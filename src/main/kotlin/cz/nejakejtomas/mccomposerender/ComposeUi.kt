@@ -2,26 +2,20 @@
 
 package cz.nejakejtomas.mccomposerender
 
-import androidx.compose.foundation.ContextMenuArea
-import androidx.compose.foundation.ContextMenuState
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.text.LocalTextContextMenu
-import androidx.compose.foundation.text.TextContextMenu
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.InternalComposeUiApi
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.PointerButton
 import androidx.compose.ui.input.pointer.PointerEventType
-import androidx.compose.ui.platform.ClipEntry
-import androidx.compose.ui.platform.LocalClipboard
-import androidx.compose.ui.platform.NativeClipboard
 import androidx.compose.ui.scene.CanvasLayersComposeScene
 import androidx.compose.ui.scene.ComposeScene
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.LayoutDirection
 import com.mojang.blaze3d.systems.RenderSystem
+import cz.nejakejtomas.mccomposerender.providers.LocalMinecraft
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancel
@@ -29,9 +23,6 @@ import net.minecraft.client.Minecraft
 import net.minecraft.client.renderer.texture.DynamicTexture
 import net.minecraft.resources.ResourceLocation
 import org.jetbrains.skiko.FrameDispatcher
-import java.awt.datatransfer.DataFlavor
-import java.awt.datatransfer.StringSelection
-import java.awt.datatransfer.Transferable
 
 @OptIn(InternalComposeUiApi::class, ExperimentalFoundationApi::class)
 class ComposeUi(
@@ -56,26 +47,8 @@ class ComposeUi(
     ).apply {
         setContent {
             CompositionLocalProvider(
-                LocalTextContextMenu provides EmptyContextMenu,
-                LocalClipboard provides clipboard,
                 LocalMinecraft provides minecraft,
             ) { content(this@ComposeUi) }
-        }
-    }
-
-    private val clipboard = object : androidx.compose.ui.platform.Clipboard {
-        override val nativeClipboard: NativeClipboard
-            get() = minecraft.keyboardHandler::getClipboard to minecraft.keyboardHandler::setClipboard
-
-        override suspend fun getClipEntry(): ClipEntry {
-            return ClipEntry(StringSelection(minecraft.keyboardHandler.clipboard))
-        }
-
-        override suspend fun setClipEntry(clipEntry: ClipEntry?) {
-            minecraft.keyboardHandler.clipboard =
-                (clipEntry?.nativeClipEntry as? Transferable)?.getTransferData(
-                    DataFlavor.stringFlavor
-                ) as? String ?: ""
         }
     }
 
@@ -168,18 +141,5 @@ class ComposeUi(
         image.clear()
         scene.render(image.canvas, System.nanoTime())
         texture.upload()
-    }
-
-    companion object {
-        private val EmptyContextMenu = object : TextContextMenu {
-            @Composable
-            override fun Area(
-                textManager: TextContextMenu.TextManager,
-                state: ContextMenuState,
-                content: @Composable () -> Unit
-            ) {
-                ContextMenuArea({ emptyList() }, state, content = content)
-            }
-        }
     }
 }

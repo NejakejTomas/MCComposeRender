@@ -1,4 +1,4 @@
-package cz.nejakejtomas.mccomposerender
+package cz.nejakejtomas.mccomposerender.providers
 
 import androidx.compose.runtime.ProvidableCompositionLocal
 import androidx.compose.runtime.staticCompositionLocalOf
